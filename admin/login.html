@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login - EventNest</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/admin.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<button class="theme-toggle login-theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+
+<div class="login-page">
+  <!-- Animated bg orbs -->
+  <div class="login-bg-anim">
+    <div class="login-orb login-orb-1"></div>
+    <div class="login-orb login-orb-2"></div>
+    <div class="login-orb login-orb-3"></div>
+  </div>
+
+  <canvas id="particles" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
+  <div class="login-card">
+    <div class="login-logo">
+      <i class="fas fa-calendar-star"></i>
+      <span>EventNest</span>
+    </div>
+    <h1>Admin Login</h1>
+    <p class="login-sub">Sign in to manage events and bookings.</p>
+
+    <form id="adminLoginForm" novalidate>
+      <div class="form-group">
+        <label for="adminUser"><i class="fas fa-user"></i> Username</label>
+        <input type="text" id="adminUser" placeholder="Enter admin username" required autocomplete="username">
+        <div class="error-text">Username is required.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="adminPass"><i class="fas fa-lock"></i> Password</label>
+        <div class="password-wrap">
+          <input type="password" id="adminPass" placeholder="Enter admin password" required autocomplete="current-password">
+          <button type="button" class="toggle-pass" aria-label="Show password"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="error-text">Password is required.</div>
+      </div>
+
+      <div id="loginError" class="login-error"></div>
+
+      <button type="submit" class="btn btn-primary btn-block">
+        <i class="fas fa-right-to-bracket"></i> Sign In
+      </button>
+    </form>
+
+    <div class="login-hint">
+      <i class="fas fa-circle-info"></i>
+      Demo credentials: <strong>admin</strong> / <strong>admin123</strong>
+    </div>
+
+    <a href="../index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to website</a>
+  </div>
+</div>
+
+<script src="../js/app.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+(function(){
+  const canvas = document.getElementById('particles');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+  const isDark=()=>document.documentElement.getAttribute('data-theme')==='dark';
+  for(let i=0;i<50;i++) pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+.4,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,alpha:Math.random()*.4+.1});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const col=isDark()?'162,155,254':'108,92,231';
+    pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(${col},${p.alpha})`;ctx.fill();p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;});
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

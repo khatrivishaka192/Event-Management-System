@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In / Register – EventNest</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; }
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  padding: 44px 40px 36px;
+  max-width: 460px;
+  width: 100%;
+  box-shadow: 0 24px 80px rgba(108,92,231,0.2);
+  position: relative;
+  z-index: 2;
+}
+
+.auth-logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 30px;
+  text-decoration: none;
+}
+
+/* ── Tab switcher ── */
+.auth-tabs {
+  display: flex;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 32px;
+  gap: 4px;
+}
+.auth-tab {
+  flex: 1;
+  padding: 11px 10px;
+  text-align: center;
+  border-radius: 9px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.auth-tab.active {
+  background: var(--card-bg);
+  color: var(--primary);
+  box-shadow: 0 2px 10px rgba(108,92,231,0.18);
+}
+
+/* ── Forms ── */
+.auth-panel { display: none; }
+.auth-panel.show { display: block; }
+
+.auth-title { font-size: 1.35rem; font-weight: 700; margin: 0 0 4px; }
+.auth-subtitle { color: var(--text-muted); font-size: 0.87rem; margin: 0 0 24px; }
+
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 7px;
+  color: var(--text);
+}
+.form-group label i { margin-right: 6px; color: var(--primary); }
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--card-border);
+  background: var(--bg-secondary);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(108,92,231,0.12);
+}
+.form-group.error input {
+  border-color: #e17055;
+  box-shadow: 0 0 0 3px rgba(225,112,85,0.1);
+}
+.form-group.success input {
+  border-color: #00b894;
+}
+.err-msg {
+  font-size: 0.78rem;
+  color: #e17055;
+  margin-top: 5px;
+  display: none;
+}
+.form-group.error .err-msg { display: block; }
+
+/* password wrap */
+.pass-wrap { position: relative; }
+.pass-wrap input { padding-right: 44px; }
+.pass-eye {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px;
+}
+.pass-eye:hover { color: var(--primary); }
+
+/* alert box */
+.alert-box {
+  background: rgba(225,112,85,0.1);
+  border: 1px solid rgba(225,112,85,0.3);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 0.84rem;
+  color: #e17055;
+  margin-bottom: 16px;
+  display: none;
+}
+.alert-box.show { display: block; }
+
+.btn-auth {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.2s, transform 0.15s;
+  margin-top: 6px;
+}
+.btn-auth:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-auth:active { transform: translateY(0); }
+
+.auth-switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.auth-switch a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+.auth-switch a:hover { text-decoration: underline; }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.83rem;
+  text-decoration: none;
+  margin-top: 22px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--primary); }
+
+.theme-corner { position: fixed; top: 20px; right: 20px; z-index: 100; }
+
+@media(max-width: 480px) {
+  .auth-card { padding: 32px 20px 28px; }
+}
+</style>
+</head>
+<body>
+
+<div class="orb-canvas">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<canvas id="particles" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+<button class="theme-toggle theme-corner" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+
+<div class="auth-page">
+  <div class="auth-card">
+
+    <a href="welcome.html" class="auth-logo">
+      <i class="fas fa-calendar-star"></i> EventNest
+    </a>
+
+    <!-- TAB SWITCHER -->
+    <div class="auth-tabs">
+      <button class="auth-tab" id="tabLogin"    onclick="showTab('login')">Sign In</button>
+      <button class="auth-tab" id="tabRegister" onclick="showTab('register')">Register</button>
+    </div>
+
+    <!-- ═══════════ LOGIN PANEL ═══════════ -->
+    <div class="auth-panel" id="loginPanel">
+      <h2 class="auth-title">Welcome back 👋</h2>
+      <p class="auth-subtitle">Sign in to your EventNest account to continue.</p>
+
+      <div class="form-group" id="fg-loginEmail">
+        <label for="loginEmail"><i class="fas fa-envelope"></i>Email Address</label>
+        <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email">
+        <div class="err-msg">Please enter a valid email address.</div>
+      </div>
+
+      <div class="form-group" id="fg-loginPass">
+        <label for="loginPass"><i class="fas fa-lock"></i>Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="loginPass" placeholder="Enter your password" autocomplete="current-password">
+          <button type="button" class="pass-eye" onclick="toggleEye('loginPass',this)"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="err-msg">Password is required.</div>
+      </div>
+
+      <div class="alert-box" id="loginAlert"></div>
+
+      <button class="btn-auth" onclick="doLogin()">
+        <i class="fas fa-right-to-bracket"></i> Sign In
+      </button>
+
+      <div class="auth-switch">
+        Don't have an account? <a href="#" onclick="showTab('register');return false;">Create one free</a>
+      </div>
+    </div>
+
+    <!-- ═══════════ REGISTER PANEL ═══════════ -->
+    <div class="auth-panel" id="registerPanel">
+      <h2 class="auth-title">Create account ✨</h2>
+      <p class="auth-subtitle">Join EventNest and start booking amazing events.</p>
+
+      <div class="form-group" id="fg-regUsername">
+        <label for="regUsername"><i class="fas fa-user"></i>Username</label>
+        <input type="text" id="regUsername" placeholder="e.g. ali_khan" autocomplete="username">
+        <div class="err-msg">Username must be at least 3 characters (letters, numbers, _ only).</div>
+      </div>
+
+      <div class="form-group" id="fg-regEmail">
+        <label for="regEmail"><i class="fas fa-envelope"></i>Email Address</label>
+        <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email">
+        <div class="err-msg">Please enter a valid email address.</div>
+      </div>
+
+      <div class="form-group" id="fg-regPass">
+        <label for="regPass"><i class="fas fa-lock"></i>Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="regPass" placeholder="Minimum 6 characters" autocomplete="new-password">
+          <button type="button" class="pass-eye" onclick="toggleEye('regPass',this)"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="err-msg">Password must be at least 6 characters.</div>
+      </div>
+
+      <div class="form-group" id="fg-regConfirm">
+        <label for="regConfirm"><i class="fas fa-lock"></i>Confirm Password</label>
+        <div class="pass-wrap">
+          <input type="password" id="regConfirm" placeholder="Repeat your password" autocomplete="new-password">
+          <button type="button" class="pass-eye" onclick="toggleEye('regConfirm',this)"><i class="fas fa-eye"></i></button>
+        </div>
+        <div class="err-msg">Passwords do not match.</div>
+      </div>
+
+      <div class="alert-box" id="registerAlert"></div>
+
+      <button class="btn-auth" onclick="doRegister()">
+        <i class="fas fa-user-plus"></i> Create Account
+      </button>
+
+      <div class="auth-switch">
+        Already have an account? <a href="#" onclick="showTab('login');return false;">Sign in</a>
+      </div>
+    </div>
+
+    <a href="welcome.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to welcome</a>
+
+  </div>
+</div>
+
+
+</body>
+<script src="js/app.js"></script>
+<script>
+/* ════════════════════════════════════
+   AUTH PAGE  –  clean rewrite
+   ════════════════════════════════════ */
+
+const USERS_KEY   = 'ems_users';
+const SESSION_KEY = 'ems_user_session';
+
+/* ── Tab switcher ── */
+function showTab(tab) {
+  var loginPanel    = document.getElementById('loginPanel');
+  var registerPanel = document.getElementById('registerPanel');
+  var tabLogin      = document.getElementById('tabLogin');
+  var tabRegister   = document.getElementById('tabRegister');
+
+  if (tab === 'login') {
+    loginPanel.style.display    = 'block';
+    registerPanel.style.display = 'none';
+    tabLogin.classList.add('active');
+    tabRegister.classList.remove('active');
+  } else {
+    loginPanel.style.display    = 'none';
+    registerPanel.style.display = 'block';
+    tabLogin.classList.remove('active');
+    tabRegister.classList.add('active');
+  }
+}
+
+/* ── Password eye toggle ── */
+function toggleEye(inputId, btn) {
+  var inp = document.getElementById(inputId);
+  var hide = inp.type === 'password';
+  inp.type = hide ? 'text' : 'password';
+  btn.innerHTML = hide ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+}
+
+/* ── Field validation helpers ── */
+function fieldOk(groupId) {
+  document.getElementById(groupId).classList.remove('error');
+  document.getElementById(groupId).classList.add('success');
+}
+function fieldErr(groupId) {
+  document.getElementById(groupId).classList.add('error');
+  document.getElementById(groupId).classList.remove('success');
+}
+function clearField(groupId) {
+  document.getElementById(groupId).classList.remove('error','success');
+}
+
+/* ── Local storage helpers ── */
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); } catch(e) { return []; }
+}
+function saveUsers(users) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+function setSession(user) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({
+    name:     user.username,
+    username: user.username,
+    email:    user.email
+  }));
+}
+
+/* ══════════ LOGIN ══════════ */
+function doLogin() {
+  var email   = document.getElementById('loginEmail').value.trim();
+  var pass    = document.getElementById('loginPass').value;
+  var alertEl = document.getElementById('loginAlert');
+  var valid   = true;
+
+  // Reset
+  clearField('fg-loginEmail');
+  clearField('fg-loginPass');
+  alertEl.classList.remove('show');
+
+  // Validate email
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    fieldErr('fg-loginEmail'); valid = false;
+  } else { fieldOk('fg-loginEmail'); }
+
+  // Validate password
+  if (!pass) {
+    fieldErr('fg-loginPass'); valid = false;
+  } else { fieldOk('fg-loginPass'); }
+
+  if (!valid) return;
+
+  // Check credentials
+  var users = getUsers();
+  var user  = users.find(function(u) {
+    return u.email === email && u.password === pass;
+  });
+
+  if (user) {
+    setSession(user);
+    showToast('Welcome back, ' + user.username + '! 🎉');
+    setTimeout(function() { window.location.href = 'index.html'; }, 800);
+  } else {
+    alertEl.textContent = 'Incorrect email or password. Please try again.';
+    alertEl.classList.add('show');
+    fieldErr('fg-loginEmail');
+    fieldErr('fg-loginPass');
+  }
+}
+
+/* ══════════ REGISTER ══════════ */
+function doRegister() {
+  var username = document.getElementById('regUsername').value.trim();
+  var email    = document.getElementById('regEmail').value.trim();
+  var pass     = document.getElementById('regPass').value;
+  var confirm  = document.getElementById('regConfirm').value;
+  var alertEl  = document.getElementById('registerAlert');
+  var valid    = true;
+
+  // Reset all
+  ['fg-regUsername','fg-regEmail','fg-regPass','fg-regConfirm'].forEach(clearField);
+  alertEl.classList.remove('show');
+
+  // Username: min 3 chars, letters/numbers/underscore
+  if (!username || username.length < 3 || !/^[a-zA-Z0-9_]+$/.test(username)) {
+    fieldErr('fg-regUsername'); valid = false;
+  } else { fieldOk('fg-regUsername'); }
+
+  // Email format
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    fieldErr('fg-regEmail'); valid = false;
+  } else { fieldOk('fg-regEmail'); }
+
+  // Password min 6
+  if (!pass || pass.length < 6) {
+    fieldErr('fg-regPass'); valid = false;
+  } else { fieldOk('fg-regPass'); }
+
+  // Confirm match
+  if (!confirm || confirm !== pass) {
+    fieldErr('fg-regConfirm'); valid = false;
+  } else { fieldOk('fg-regConfirm'); }
+
+  if (!valid) return;
+
+  // Check duplicates
+  var users = getUsers();
+  if (users.find(function(u) { return u.email === email; })) {
+    alertEl.textContent = 'An account with this email already exists. Please sign in.';
+    alertEl.classList.add('show');
+    fieldErr('fg-regEmail');
+    return;
+  }
+  if (users.find(function(u) { return u.username.toLowerCase() === username.toLowerCase(); })) {
+    alertEl.textContent = 'This username is already taken. Please choose another.';
+    alertEl.classList.add('show');
+    fieldErr('fg-regUsername');
+    return;
+  }
+
+  // Save new user
+  var newUser = {
+    id:        'usr-' + Date.now(),
+    username:  username,
+    email:     email,
+    password:  pass,
+    createdAt: new Date().toISOString()
+  };
+  users.push(newUser);
+  saveUsers(users);
+  setSession(newUser);
+
+  showToast('Account created! Welcome to EventNest 🎉');
+  setTimeout(function() { window.location.href = 'index.html'; }, 800);
+}
+
+/* ══════════ REAL-TIME VALIDATION ══════════ */
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Redirect if already logged in
+  if (localStorage.getItem(SESSION_KEY)) {
+    window.location.replace('index.html');
+    return;
+  }
+
+  // Show correct tab from URL param
+  var mode = new URLSearchParams(window.location.search).get('mode');
+  showTab(mode === 'register' ? 'register' : 'login');
+
+  // Login – blur validation
+  var lEmail = document.getElementById('loginEmail');
+  var lPass  = document.getElementById('loginPass');
+
+  lEmail.addEventListener('blur', function() {
+    if (!this.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim()))
+      fieldErr('fg-loginEmail');
+    else fieldOk('fg-loginEmail');
+  });
+  lEmail.addEventListener('input', function() {
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim())) fieldOk('fg-loginEmail');
+  });
+  lPass.addEventListener('blur', function() {
+    if (!this.value) fieldErr('fg-loginPass'); else fieldOk('fg-loginPass');
+  });
+  lPass.addEventListener('input', function() {
+    if (this.value) fieldOk('fg-loginPass');
+  });
+
+  // Register – blur validation
+  document.getElementById('regUsername').addEventListener('blur', function() {
+    if (this.value.trim().length >= 3 && /^[a-zA-Z0-9_]+$/.test(this.value.trim()))
+      fieldOk('fg-regUsername');
+    else fieldErr('fg-regUsername');
+  });
+  document.getElementById('regUsername').addEventListener('input', function() {
+    if (this.value.trim().length >= 3 && /^[a-zA-Z0-9_]+$/.test(this.value.trim()))
+      fieldOk('fg-regUsername');
+    else if (document.getElementById('fg-regUsername').classList.contains('error'))
+      clearField('fg-regUsername');
+  });
+
+  document.getElementById('regEmail').addEventListener('blur', function() {
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim())) fieldOk('fg-regEmail');
+    else fieldErr('fg-regEmail');
+  });
+  document.getElementById('regEmail').addEventListener('input', function() {
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim())) fieldOk('fg-regEmail');
+  });
+
+  document.getElementById('regPass').addEventListener('blur', function() {
+    if (this.value.length >= 6) fieldOk('fg-regPass'); else fieldErr('fg-regPass');
+  });
+  document.getElementById('regPass').addEventListener('input', function() {
+    if (this.value.length >= 6) fieldOk('fg-regPass');
+    // re-check confirm if already typed
+    var cf = document.getElementById('regConfirm');
+    if (cf.value) {
+      if (cf.value === this.value) fieldOk('fg-regConfirm');
+      else fieldErr('fg-regConfirm');
+    }
+  });
+
+  document.getElementById('regConfirm').addEventListener('blur', function() {
+    var pass = document.getElementById('regPass').value;
+    if (this.value && this.value === pass) fieldOk('fg-regConfirm');
+    else fieldErr('fg-regConfirm');
+  });
+  document.getElementById('regConfirm').addEventListener('input', function() {
+    var pass = document.getElementById('regPass').value;
+    if (this.value === pass) fieldOk('fg-regConfirm');
+    else if (document.getElementById('fg-regConfirm').classList.contains('error'))
+      clearField('fg-regConfirm');
+  });
+
+  // Enter key on login
+  document.getElementById('loginPass').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
+  });
+  // Enter key on register
+  document.getElementById('regConfirm').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doRegister();
+  });
+});
+
+/* ── Particles ── */
+(function(){
+  var c = document.getElementById('particles'); if(!c) return;
+  var ctx = c.getContext('2d'); var W, H, pts = [];
+  function resize(){ W=c.width=window.innerWidth; H=c.height=window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  var isDark = function(){ return document.documentElement.getAttribute('data-theme')==='dark'; };
+  for(var i=0;i<50;i++) pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.4,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,alpha:Math.random()*.4+.1});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var col = isDark()?'162,155,254':'108,92,231';
+    pts.forEach(function(p){
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba('+col+','+p.alpha+')'; ctx.fill();
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+</html>

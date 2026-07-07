@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Event - EventNest</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="orb-canvas">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<canvas id="particles"></canvas>
+
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="logo"><i class="fas fa-calendar-star"></i> EventNest</a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="my-bookings.html">My Bookings</a></li>
+    </ul>
+        <div style="display:flex; align-items:center; gap: 14px;">
+      <button class="theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      <div class="user-menu-wrap" id="userMenuWrap"></div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Book Your <span style="color:var(--primary)">Tickets</span></h1>
+    <p>Fill in your details below to confirm your booking.</p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div style="max-width:600px; margin:0 auto;">
+      <div id="eventSummary"></div>
+
+      <div class="form-card">
+        <form id="bookingForm" novalidate>
+          <div class="form-group">
+            <label for="fullName"><i class="fas fa-user"></i> Full Name</label>
+            <input type="text" id="fullName" placeholder="Enter your full name" required>
+            <div class="error-text">Please enter your full name (min 3 characters).</div>
+          </div>
+
+          <div class="form-group">
+            <label for="email"><i class="fas fa-envelope"></i> Email</label>
+            <input type="email" id="email" placeholder="you@example.com" required>
+            <div class="error-text">Please enter a valid email address.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+            <input type="tel" id="phone" placeholder="+92 300 1234567" required>
+            <div class="error-text">Please enter a valid phone number.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="tickets"><i class="fas fa-ticket"></i> Number of Tickets</label>
+            <input type="number" id="tickets" min="1" max="10" value="1" required>
+            <div class="error-text">Tickets must be between 1 and 10.</div>
+          </div>
+
+          <div class="tickets-summary">
+            <span>Total Amount (PKR)</span>
+            <span class="total" id="totalPrice">Rs 0</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">
+            <i class="fas fa-circle-check"></i> Book Event
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      &copy; 2026 EventNest. All rights reserved. Built with HTML, CSS & JavaScript.
+    </div>
+  </div>
+</footer>
+
+</body>
+
+<script src="js/app.js"></script>
+<script src="js/booking.js"></script>
+
+<script>
+window.addEventListener('scroll',()=>{ var nb=document.getElementById('navbar'); if(nb)nb.classList.toggle('scrolled',window.scrollY>30); });
+var hb=document.getElementById('hamburger'); if(hb) hb.addEventListener('click',function(){this.classList.toggle('active');document.getElementById('navMenu').classList.toggle('active');});
+(function(){ var c=document.getElementById('particles'); if(!c)return; var ctx=c.getContext('2d'),W,H,pts=[]; function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;} resize(); window.addEventListener('resize',resize); var isDark=()=>document.documentElement.getAttribute('data-theme')==='dark'; for(var i=0;i<50;i++) pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.4,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,alpha:Math.random()*.4+.1}); function draw(){ctx.clearRect(0,0,W,H); var col=isDark()?'162,155,254':'108,92,231'; pts.forEach(function(p){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba('+col+','+p.alpha+')';ctx.fill();p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;}); requestAnimationFrame(draw);} draw(); })();
+</script>
+</html>

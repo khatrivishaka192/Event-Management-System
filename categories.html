@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Categories - EventNest</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── Categories Page ── */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+.category-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  padding: 32px 28px 24px;
+  cursor: pointer;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+  text-decoration: none;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.category-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--cat-gradient);
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 20px;
+}
+
+.category-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(108,92,231,0.18); border-color: transparent; }
+.category-card:hover::before { opacity: 1; }
+.category-card:hover .cat-icon, .category-card:hover .cat-name, .category-card:hover .cat-count, .category-card:hover .cat-desc { position: relative; z-index: 1; }
+.category-card:hover .cat-name, .category-card:hover .cat-count, .category-card:hover .cat-desc { color: #fff !important; }
+.cat-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  margin-bottom: 18px;
+  background: var(--cat-gradient);
+  color: #fff;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.25s;
+}
+
+.category-card:hover .cat-icon { transform: scale(1.12) rotate(-4deg); background: rgba(255,255,255,0.25); }
+.cat-name { font-size: 1.15rem; font-weight: 700; margin-bottom: 6px; color: var(--text); position: relative; z-index: 1; transition: color 0.2s; }
+.cat-count { font-size: 0.82rem; color: var(--primary); font-weight: 600; margin-bottom: 10px; position: relative; z-index: 1; transition: color 0.2s; }
+.cat-desc { font-size: 0.84rem; color: var(--text-muted); line-height: 1.55; position: relative; z-index: 1; transition: color 0.2s; }
+.cat-arrow { position: absolute; bottom: 22px; right: 22px; width: 34px; height: 34px; border-radius: 50%; background: var(--cat-gradient); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.8rem; opacity: 0; transform: translateX(-6px); transition: opacity 0.25s, transform 0.25s; z-index: 1; }
+.category-card:hover .cat-arrow { opacity: 1; transform: translateX(0); }
+
+/* Category event listing */
+.category-events-section { display: none; }
+.category-events-section.active { display: block; }
+.category-section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+.category-section-header .back-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text); padding: 8px 16px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+.category-section-header .back-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.active-category-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; border-radius: 30px; font-size: 0.88rem; font-weight: 600; color: #fff; }
+</style>
+</head>
+<body>
+<div class="orb-canvas">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+<canvas id="particles"></canvas>
+
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="logo"><i class="fas fa-calendar-star"></i> EventNest</a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="categories.html" class="active">Categories</a></li>
+      <li><a href="my-bookings.html">My Bookings</a></li>
+    </ul>
+    <div style="display:flex; align-items:center; gap: 14px;">
+      <button class="theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      <div class="user-menu-wrap" id="userMenuWrap"></div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <h1>Event <span style="color:var(--primary)">Categories</span></h1>
+    <p>Explore events by category — find exactly what you're looking for.</p>
+  </div>
+</div>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+
+    <!-- CATEGORIES GRID -->
+    <div id="categoriesView">
+      <div class="categories-grid" id="categoriesGrid"></div>
+    </div>
+
+    <!-- CATEGORY EVENTS VIEW -->
+    <div id="categoryEventsView" style="display:none;">
+      <div class="category-section-header">
+        <button class="back-btn" onclick="showCategoriesView()">
+          <i class="fas fa-arrow-left"></i> All Categories
+        </button>
+        <span class="active-category-badge" id="activeCategoryBadge"></span>
+      </div>
+      <div class="events-grid" id="categoryEventsList"></div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      &copy; 2026 EventNest. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+const CATEGORY_META = {
+  Technology: { icon: 'fas fa-microchip', gradient: 'linear-gradient(135deg,#6c5ce7,#a29bfe)', desc: 'Tech conferences, hackathons, AI summits and developer workshops.' },
+  Music:       { icon: 'fas fa-music',    gradient: 'linear-gradient(135deg,#fd79a8,#e84393)',  desc: 'Live concerts, music festivals, DJ nights and open-mic events.' },
+  Business:    { icon: 'fas fa-briefcase',gradient: 'linear-gradient(135deg,#00b894,#00cec9)',  desc: 'Startup pitch nights, networking events and leadership summits.' },
+  Art:         { icon: 'fas fa-palette',  gradient: 'linear-gradient(135deg,#fdcb6e,#e17055)',  desc: 'Art exhibitions, gallery openings and creative workshops.' },
+  Sports:      { icon: 'fas fa-trophy',   gradient: 'linear-gradient(135deg,#00cec9,#0984e3)',  desc: 'Marathons, tournaments, fitness events and sports competitions.' },
+  Food:        { icon: 'fas fa-utensils', gradient: 'linear-gradient(135deg,#e17055,#d63031)',  desc: 'Culinary masterclasses, food festivals and tasting events.' },
+  Entertainment:{ icon: 'fas fa-masks-theater', gradient: 'linear-gradient(135deg,#a29bfe,#6c5ce7)', desc: 'Comedy nights, theatre shows, screenings and live performances.' },
+  Education:   { icon: 'fas fa-graduation-cap', gradient: 'linear-gradient(135deg,#55efc4,#00b894)', desc: 'Seminars, workshops, training sessions and educational talks.' },
+};
+
+function buildCategoriesGrid() {
+  const events = getEvents();
+  const grid = document.getElementById('categoriesGrid');
+  const counts = {};
+  events.forEach(e => { counts[e.category] = (counts[e.category] || 0) + 1; });
+
+  const cats = Object.keys(CATEGORY_META);
+  grid.innerHTML = cats.map(cat => {
+    const meta = CATEGORY_META[cat];
+    const count = counts[cat] || 0;
+    return `
+      <div class="category-card" style="--cat-gradient:${meta.gradient}" onclick="showCategoryEvents('${cat}')">
+        <div class="cat-icon"><i class="${meta.icon}"></i></div>
+        <div class="cat-name">${cat}</div>
+        <div class="cat-count">${count} Event${count !== 1 ? 's' : ''}</div>
+        <div class="cat-desc">${meta.desc}</div>
+        <div class="cat-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showCategoryEvents(category) {
+  const events = getEvents().filter(e => e.category === category);
+  document.getElementById('categoriesView').style.display = 'none';
+  document.getElementById('categoryEventsView').style.display = 'block';
+
+  const meta = CATEGORY_META[category] || {};
+  const badge = document.getElementById('activeCategoryBadge');
+  badge.style.background = meta.gradient || 'var(--primary)';
+  badge.innerHTML = `<i class="${meta.icon || 'fas fa-tag'}"></i> ${category}`;
+
+  renderEvents('categoryEventsList', events);
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function showCategoriesView() {
+  document.getElementById('categoriesView').style.display = 'block';
+  document.getElementById('categoryEventsView').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Check for ?category= param in URL
+(function() {
+  const param = new URLSearchParams(window.location.search).get('category');
+  if (param) {
+    buildCategoriesGrid();
+    showCategoryEvents(param);
+  } else {
+    buildCategoriesGrid();
+  }
+})();
+
+// Particles
+(function(){
+  const c=document.getElementById('particles'); if(!c)return;
+  const ctx=c.getContext('2d'); let W,H,pts=[];
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+  resize(); window.addEventListener('resize',resize);
+  const isDark=()=>document.documentElement.getAttribute('data-theme')==='dark';
+  for(let i=0;i<50;i++) pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.4,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,alpha:Math.random()*.4+.1});
+  function draw(){ctx.clearRect(0,0,W,H); const col=isDark()?'162,155,254':'108,92,231'; pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(${col},${p.alpha})`;ctx.fill();p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;}); requestAnimationFrame(draw);}
+  draw();
+})();
+window.addEventListener('scroll',()=>{ var nb=document.getElementById('navbar'); if(nb)nb.classList.toggle('scrolled',window.scrollY>30); });
+document.getElementById('hamburger').addEventListener('click',function(){ this.classList.toggle('active'); document.getElementById('navMenu').classList.toggle('active'); });
+</script>
+</body>
+</html>

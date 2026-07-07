@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EventNest - Discover & Book Amazing Events</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ANIMATED BACKGROUND -->
+<div class="orb-canvas">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+
+<canvas id="particles"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="index.html" class="logo"><i class="fas fa-calendar-star"></i> EventNest</a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="my-bookings.html">My Bookings</a></li>
+    </ul>
+        <div style="display:flex; align-items:center; gap: 14px;">
+      <button class="theme-toggle" aria-label="Toggle theme"><i class="fas fa-moon"></i></button>
+      <div class="user-menu-wrap" id="userMenuWrap"></div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-shapes">
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="hero-shape hero-shape-3"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge"><i class="fas fa-fire"></i> 500+ Live Events This Month</div>
+      <h1>
+        <span class="line">Discover &amp; Book</span>
+        <span class="line"><span>Amazing Events</span></span>
+        <span class="line">Near You</span>
+      </h1>
+      <p>From tech conferences to music festivals — find experiences that matter to you and book your spot in just a few clicks.</p>
+      <div class="hero-actions">
+        <a href="events.html" class="btn btn-primary"><i class="fas fa-compass"></i> Explore Events</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-box"><h3 class="counter" data-target="500">0</h3><p>Events Hosted</p></div>
+        <div class="stat-box"><h3 class="counter" data-target="50000" data-suffix="K+">0</h3><p>Happy Attendees</p></div>
+        <div class="stat-box"><h3 class="counter" data-target="120">0</h3><p>Cities Covered</p></div>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hero-image-wrap">
+        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=900&q=80" alt="Event crowd">
+        <div class="hero-float-card card-1">
+          <i class="fas fa-ticket"></i>
+          <div><div style="font-size:0.78rem;color:var(--text-muted)">Just booked</div><div>DevConf 2026</div></div>
+        </div>
+        <div class="hero-float-card card-2">
+          <i class="fas fa-star" style="color:#fdcb6e"></i>
+          <div><div style="font-size:0.78rem;color:var(--text-muted)">Rated</div><div>4.9 / 5.0</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED EVENTS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="eyebrow">✦ Handpicked for You</div>
+      <h2>Featured <span>Events</span></h2>
+      <p>Hand-picked experiences you don't want to miss out on this season.</p>
+    </div>
+    <div class="events-grid" id="featuredEvents"></div>
+    <div class="text-center mt-2 reveal">
+      <a href="events.html" class="btn btn-outline"><i class="fas fa-arrow-right"></i> View All Events</a>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES SECTION -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="eyebrow">✦ Browse by Type</div>
+      <h2>Event <span>Categories</span></h2>
+      <p>Pick a category and discover events tailored to your interests.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;" id="homeCategoryCards"></div>
+    <div class="text-center mt-2 reveal">
+      <a href="categories.html" class="btn btn-outline"><i class="fas fa-grid-2"></i> View All Categories</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="eyebrow">✦ Why EventNest</div>
+      <h2>Everything You <span>Need</span></h2>
+      <p>We make event discovery and booking simple, fast, and enjoyable.</p>
+    </div>
+    <div class="events-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+        <h3>Instant Booking</h3>
+        <p>Book your tickets in seconds with our streamlined checkout process.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background: linear-gradient(135deg, var(--secondary), #00b894)"><i class="fas fa-shield-halved"></i></div>
+        <h3>Secure &amp; Reliable</h3>
+        <p>Your data stays safe with secure local storage and validated forms.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background: linear-gradient(135deg, var(--accent), #e84393)"><i class="fas fa-tags"></i></div>
+        <h3>Best Prices</h3>
+        <p>Discover events for every budget, including free community events.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background: linear-gradient(135deg, var(--accent2), #e17055)"><i class="fas fa-headset"></i></div>
+        <h3>24/7 Support</h3>
+        <p>Our team is always ready to help you with any questions or issues.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:16px;font-size:1.3rem;"><i class="fas fa-calendar-star"></i> EventNest</div>
+        <p>Your one-stop platform to discover, explore, and book the best events happening around you.</p>
+        <div class="social-icons">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a><br>
+        <a href="events.html">Events</a><br>
+        <a href="my-bookings.html">My Bookings</a><br>
+      </div>
+      <div>
+        <h4>Categories</h4>
+        <a href="categories.html?category=Technology">Technology</a><br>
+        <a href="categories.html?category=Music">Music</a><br>
+        <a href="categories.html?category=Business">Business</a><br>
+        <a href="categories.html?category=Sports">Sports</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p><i class="fas fa-location-dot"></i> Karachi, Pakistan</p>
+        <p><i class="fas fa-envelope"></i> hello@eventnest.com</p>
+        <p><i class="fas fa-phone"></i> +92 300 1234567</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 EventNest. All rights reserved. Built with HTML, CSS &amp; JavaScript.
+    </div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script>
+// ── Particle canvas ──
+(function(){
+  const canvas = document.getElementById('particles');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+  for(let i=0;i<70;i++){
+    particles.push({
+      x: Math.random()*W, y: Math.random()*H,
+      r: Math.random()*2+0.5,
+      vx: (Math.random()-0.5)*0.4, vy: (Math.random()-0.5)*0.4,
+      alpha: Math.random()*0.5+0.1
+    });
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const color = isDark() ? '162,155,254' : '108,92,231';
+    particles.forEach(p=>{
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${color},${p.alpha})`;
+      ctx.fill();
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+    });
+    // Draw lines
+    particles.forEach((a,i)=>{
+      particles.slice(i+1).forEach(b=>{
+        const dist = Math.hypot(a.x-b.x, a.y-b.y);
+        if(dist<120){
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle = `rgba(${color},${0.12*(1-dist/120)})`;
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      });
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── Scroll reveals ──
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } });
+},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ── Navbar scroll ──
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY>30);
+});
+
+// ── Hamburger ──
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('active');
+  document.getElementById('navMenu').classList.toggle('active');
+});
+
+// ── Category cards on home ──
+(function(){
+  const CAT_META = {
+    Technology:    { icon: 'fas fa-microchip',       gradient: 'linear-gradient(135deg,#6c5ce7,#a29bfe)' },
+    Music:         { icon: 'fas fa-music',            gradient: 'linear-gradient(135deg,#fd79a8,#e84393)' },
+    Business:      { icon: 'fas fa-briefcase',        gradient: 'linear-gradient(135deg,#00b894,#00cec9)' },
+    Art:           { icon: 'fas fa-palette',          gradient: 'linear-gradient(135deg,#fdcb6e,#e17055)' },
+    Sports:        { icon: 'fas fa-trophy',           gradient: 'linear-gradient(135deg,#00cec9,#0984e3)' },
+    Food:          { icon: 'fas fa-utensils',         gradient: 'linear-gradient(135deg,#e17055,#d63031)' },
+    Entertainment: { icon: 'fas fa-masks-theater',    gradient: 'linear-gradient(135deg,#a29bfe,#6c5ce7)' },
+    Education:     { icon: 'fas fa-graduation-cap',   gradient: 'linear-gradient(135deg,#55efc4,#00b894)' },
+  };
+  const container = document.getElementById('homeCategoryCards');
+  if (!container) return;
+  container.innerHTML = Object.entries(CAT_META).map(([name, meta]) => `
+    <a href="categories.html?category=${name}" style="
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+      padding:22px 12px;border-radius:16px;text-decoration:none;cursor:pointer;
+      background:var(--card-bg);border:1px solid var(--card-border);
+      transition:transform .22s,box-shadow .22s;text-align:center;
+    " onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 12px 30px rgba(108,92,231,0.18)'"
+       onmouseout="this.style.transform='';this.style.boxShadow=''">
+      <div style="width:52px;height:52px;border-radius:14px;background:${meta.gradient};display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;">
+        <i class="${meta.icon}"></i>
+      </div>
+      <span style="font-size:0.84rem;font-weight:600;color:var(--text);">${name}</span>
+    </a>
+  `).join('');
+})();
+
+function animateCounter(el){
+  const target = parseInt(el.dataset.target);
+  const suffix = el.dataset.suffix || '+';
+  const dur = 1800, step = 16;
+  let current = 0;
+  const inc = target / (dur / step);
+  const t = setInterval(()=>{
+    current = Math.min(current + inc, target);
+    if(target >= 1000 && suffix.includes('K')){
+      el.textContent = (current/1000).toFixed(0) + 'K+';
+    } else {
+      el.textContent = Math.floor(current) + suffix;
+    }
+    if(current >= target) clearInterval(t);
+  }, step);
+}
+
+const cObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      animateCounter(e.target);
+      cObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.5});
+document.querySelectorAll('.counter').forEach(el=>cObs.observe(el));
+</script>
+</body>
+</html>
